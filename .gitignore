@@ -1,0 +1,10 @@
+*~
+\#*
+
+.sconf_temp
+.sconsign.dblite
+
+/config.log
+/pcbtool
+/build
+/libpcb.a
