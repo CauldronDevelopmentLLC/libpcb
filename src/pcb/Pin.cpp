@@ -20,65 +20,8 @@
 
 #include "Pin.h"
 
-#include <algorithm>
-
 using namespace std;
 using namespace PCB;
 
 
-Pin::Pin() : Object("Pin"), thickness(0), clearance(0), mask(0), drill(0) {}
-
-
-Pin::Pin(int drill, int pad, int clearance, int mask) :
-  Object("Pin"), thickness(drill + pad), clearance(clearance),
-  mask(drill + pad + mask),
-  drill(drill) {
-  if (pad == 0) flags = "hole";
-}
-
-
-void Pin::rotate(const Point &center, double angle) {
-  p.rotate(center, angle);
-}
-
-
-void Pin::translate(const Point &t) {
-  p += t;
-}
-
-
-void Pin::multiply(double m) {
-  p.multiply(m);
-  thickness *= m;
-  clearance *= m;
-  mask *= m;
-  drill *= m;
-}
-
-
-void Pin::round(int i) {
-  p.round(i);
-  Object::round(thickness, i);
-  Object::round(clearance, i);
-  Object::round(mask, i);
-  Object::round(drill, i);
-}
-
-
-void Pin::bounds(Point &min, Point &max) const {
-  int x = std::max(thickness, std::max(mask, drill)) / 2;
-  Point offset(x, x);
-
-  Point(p - offset).bounds(min, max);
-  Point(p + offset).bounds(min, max);
-}
-
-
-void Pin::flipX(double x) {
-  p.flipX(x);
-}
-
-
-void Pin::flipY(double y) {
-  p.flipY(y);
-}
+void Pin::setPinThermals(const string &thermal) {setThermals(8, thermal);}

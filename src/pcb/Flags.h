@@ -18,20 +18,29 @@
 
 \******************************************************************************/
 
-#ifndef PCB_SYMBOL_H
-#define PCB_SYMBOL_H
+#ifndef PCB_FLAGS_H
+#define PCB_FLAGS_H
 
-#include "Parent.h"
+#include <map>
+#include <string>
 
 
 namespace PCB {
-  class Symbol : public Parent {
-  public:
-    char c;
-    int delta;
+  class Flags {
+    typedef std::map<std::string, std::string> flags_t;
+    flags_t flags;
 
-    Symbol() : Parent("Symbol"), c(' '), delta(0) {}
+  public:
+    Flags(const std::string &flags);
+
+    std::string toString() const;
+
+    void set(const std::string &flag, const std::string &value);
+    std::string get(const std::string &flag) const;
+    void clear(const std::string &flag);
+    bool has(const std::string &flag) const;
+    bool isLocked() const {return has("lock");}
   };
 }
 
-#endif // PCB_SYMBOL_H
+#endif // PCB_FLAGS_H

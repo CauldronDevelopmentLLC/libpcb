@@ -20,51 +20,47 @@
 
 #include "Line.h"
 
+#include <math.h>
+
 using namespace std;
+using namespace cb;
 using namespace PCB;
 
 
-void Line::rotate(const Point &center, double angle) {
-  p1.rotate(center, angle);
-  p2.rotate(center, angle);
+Segment2D Line::toSegment() const {
+  return Segment2D(Vector2D(getDouble(0), getDouble(1)),
+                   Vector2D(getDouble(2), getDouble(3)));
 }
 
 
-void Line::translate(const Point &t) {
-  p1 += t;
-  p2 += t;
+void Line::setSegment(const Segment2D &seg) {
+  setDouble(0, seg[0].x());
+  setDouble(1, seg[0].y());
+  setDouble(2, seg[1].x());
+  setDouble(3, seg[1].y());
 }
 
 
-void Line::multiply(double m) {
-  p1.multiply(m);
-  p2.multiply(m);
-  thickness *= m;
-  clearance *= m;
+void Line::align(double i) {
+  if (getFlags(6).isLocked()) return;
+  Object::align(0, i);
+  Object::align(1, i);
+  Object::align(2, i);
+  Object::align(3, i);
 }
 
 
-void Line::round(int i) {
-  p1.round(i);
-  p2.round(i);
-  Object::round(thickness, i);
-  Object::round(clearance, i);
+void Line::findAskew() {
+  double x1 = getDouble(0);
+  double y1 = getDouble(1);
+  double x2 = getDouble(2);
+  double y2 = getDouble(3);
+
+  if (x1 != x2 && y1 != y2 && 0.00001 < fabs(fabs(x1 - x2) - fabs(y1 - y2)))
+    setFlag(6, "found");
 }
 
 
-void Line::bounds(Point &min, Point &max) const {
-  p1.bounds(min, max);
-  p2.bounds(min, max);
-}
-
-
-void Line::flipX(double x) {
-  p1.flipX(x);
-  p2.flipX(x);
-}
-
-
-void Line::flipY(double y) {
-  p1.flipY(y);
-  p2.flipY(y);
+void Line::findShort(double length) {
+  if (toSegment().length() <= length) setFlag(6, "found");
 }

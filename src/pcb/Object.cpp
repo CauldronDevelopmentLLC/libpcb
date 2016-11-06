@@ -20,6 +20,7 @@
 
 #include "Object.h"
 
+#include <cbang/String.h>
 #include <cbang/Exception.h>
 #include <cbang/Math.h>
 #include <cbang/parse/Scanner.h>
@@ -29,15 +30,75 @@ using namespace cb;
 using namespace PCB;
 
 
-
-
-void Object::round(double &v, int i) {
-  v = i * Math::round(v / i);
+Flags Object::getFlags(unsigned index) const {
+  return Flags(header[index].toString());
 }
 
 
-void Object::round(int &v, int i) {
-  v = i * (int)Math::round((double)v / i);
+bool Object::hasFlag(unsigned index, const string &flag) const {
+  return getFlags(index).has(flag);
+}
+
+
+std::string Object::getFlag(unsigned index, const string &flag) const {
+  return getFlags(index).get(flag);
+}
+
+
+void Object::setFlag(unsigned index, const string &flag, const string &value) {
+  Flags flags = getFlags(index);
+  flags.set(flag, value);
+  header[index].set(flags.toString());
+}
+
+
+void Object::clearFlag(unsigned index, const string &flag) {
+  Flags flags = getFlags(index);
+  flags.clear(flag);
+  header[index].set(flags.toString());
+}
+
+
+void Object::setThermals(unsigned index, const string &thermal) {
+  if (!hasFlag(index, "thermal")) return;
+
+  string flag = getFlag(index, "thermal");
+
+  vector<string> thermals;
+  String::tokenize(flag, thermals, ", \t\n\r");
+
+  flag.clear();
+  for (unsigned i = 0; i < thermals.size(); i++) {
+    if (i) flag += ",";
+    flag += string(1, thermals[i][0]) + thermal;
+  }
+
+  setFlag(index, "thermal", flag);
+
+}
+
+
+double Object::getDouble(unsigned index) const {return header[index].toReal();}
+void Object::setDouble(unsigned index, double x) {header[index].set(x);}
+
+
+int64_t Object::getInteger(unsigned index) const {
+  return header[index].toInteger();
+}
+
+
+void Object::setInteger(unsigned index, int64_t x) {header[index].set(x);}
+
+
+void Object::align(unsigned index, double x) {
+  Variant &v = header[index];
+  v.set(alignValue(v.toReal(), x));
+}
+
+
+double Object::alignValue(double value, double x) {
+  if (!x) THROW("Cannot align to zero");
+  return x * Math::round(value / x);
 }
 
 
@@ -86,8 +147,6 @@ void Object::parse(Tokenizer &tokenizer) {
   }
 
   tokenizer.advance();
-
-  init();
 }
 
 

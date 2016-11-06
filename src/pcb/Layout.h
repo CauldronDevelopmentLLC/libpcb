@@ -29,14 +29,9 @@ namespace PCB {
   public:
     Layout() : Parent("Layout") {}
 
-    cb::SmartPointer<Layer> findLayer(int number) const;
-
     // From Object
     void parse(Tokenizer &tokenizer);
     void write(std::ostream &stream, unsigned depth = 0) const;
-
-    // From Parent
-    void merge(const Parent &o);
   };
 }
 

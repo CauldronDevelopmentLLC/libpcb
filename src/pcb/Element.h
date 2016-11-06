@@ -22,38 +22,16 @@
 #define PCB_ELEMENT_H
 
 #include "Parent.h"
-#include "Point.h"
 
-#include <string>
 
 namespace PCB {
   class Element : public Parent {
-    std::string flags;
-    std::string desc;
-    std::string name;
-    std::string value;
-    Point m;
-    Point t;
-    int tdir;
-    int tscale;
-    std::string tflags;
-
   public:
-    Element() : Parent("Element"), tdir(0), tscale(0) {}
+    Element() : Parent("Element") {}
 
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int x);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
-    void textScale(int scale);
-
-    // From Parent
-    void centerMark();
-    void subtractMask(int clear);
+    void align(double i);
+    void setTextScale(unsigned scale);
   };
 }
 

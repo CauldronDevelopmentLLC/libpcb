@@ -23,6 +23,7 @@
 
 #include "Tokenizer.h"
 #include "TokenType.h"
+#include "Flags.h"
 
 #include <cbang/SmartPointer.h>
 #include <cbang/util/Variant.h>
@@ -50,19 +51,34 @@ namespace PCB {
 
     const std::string &getName() const {return name;}
 
-    virtual void init() {}
-    virtual void rotate(const Point &center, double angle) {}
-    virtual void translate(const Point &t) {}
-    virtual void multiply(double m) {}
-    virtual void round(int x) {}
-    virtual void bounds(Point &minPt, Point &maxPt) const {}
-    virtual void flipX(double x) {}
-    virtual void flipY(double x) {}
-    virtual void lineSize(int size) {}
-    virtual void textScale(int scale) {}
+    Flags getFlags(unsigned index) const;
+    bool hasFlag(unsigned index, const std::string &flag) const;
+    std::string getFlag(unsigned index, const std::string &flag) const;
+    void setFlag(unsigned index, const std::string &flag,
+                 const std::string &value = "");
+    void clearFlag(unsigned index, const std::string &flag);
+    void setThermals(unsigned index, const std::string &thermals);
 
-    static void round(double &v, int i);
-    static void round(int &v, int i);
+    double getDouble(unsigned index) const;
+    void setDouble(unsigned index, double x);
+
+    int64_t getInteger(unsigned index) const;
+    void setInteger(unsigned index, int64_t x);
+
+    void align(unsigned index, double x);
+    static double alignValue(double value, double x);
+
+    virtual void align(double x) {}
+    virtual void setViaThermals(const std::string &thermal) {}
+    virtual void setPinThermals(const std::string &thermal) {}
+    virtual void setSilkThickness(double thickness) {}
+    virtual void setTextScale(unsigned scale) {}
+    virtual void findAskew() {}
+    virtual void findShort(double length) {}
+    virtual void findContiguous() {}
+    virtual void clearFound() {}
+    virtual bool isFound() {return false;}
+    virtual void removeFound() {}
 
     virtual void parse(Tokenizer &tokenizer);
     virtual void write(std::ostream &stream, unsigned depth = 0) const;

@@ -21,24 +21,7 @@
 #ifndef PCB_H
 #define PCB_H
 
-#include "Arc.h"
-#include "ElementArc.h"
-#include "Element.h"
-#include "ElementLine.h"
-#include "Layer.h"
-#include "Layout.h"
-#include "Line.h"
-#include "NetList.h"
-#include "Pad.h"
-#include "Pin.h"
-#include "Point.h"
-#include "Polygon.h"
-#include "Hole.h"
-#include "Symbol.h"
-#include "Text.h"
-#include "Via.h"
-#include "Thermal.h"
-#include "PolyArea.h"
+#include "Parent.h"
 #include "Tokenizer.h"
 #include "Parser.h"
 

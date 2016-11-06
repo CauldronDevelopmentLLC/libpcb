@@ -20,162 +20,17 @@
 
 #include "Element.h"
 
-#include "Pad.h"
-#include "ElementLine.h"
-
-#include <cbang/Exception.h>
-
-#include <cbang/geom/Vector.h>
-#include <cbang/geom/Rectangle.h>
-
-#include <limits>
 
 using namespace std;
 using namespace cb;
 using namespace PCB;
 
 
-void Element::rotate(const Point &center, double angle) {
-  m.rotate(center, angle);
-  t.rotate(center, angle);
+void Element::align(double i) {
+  if (getFlags(0).isLocked()) return;
+  Object::align(4, i);
+  Object::align(5, i);
 }
 
 
-void Element::translate(const Point &t) {
-  m.translate(t);
-}
-
-
-void Element::multiply(double m) {
-  this->m.multiply(m);
-  t.multiply(m);
-  Parent::multiply(m);
-}
-
-
-void Element::round(int x) {
-  m.round(x);
-  t.round(x);
-  Parent::round(x);
-}
-
-
-void Element::bounds(Point &min, Point &max) const {
-  Point localMin(numeric_limits<int>::max(), numeric_limits<int>::max());
-  Point localMax(-numeric_limits<int>::max(), -numeric_limits<int>::max());
-  Parent::bounds(localMin, localMax);
-
-  localMin += m;
-  localMax += m;
-
-  localMin.bounds(min, max);
-  localMax.bounds(min, max);
-}
-
-
-void Element::centerMark() {
-  Point center = findCenter() - m;
-  Parent::translate(-center);
-}
-
-
-void Element::subtractMask(int clear) {
-  // This is incomplete but sufficient for now.
-
-  bool changed = false;
-
-  for (iterator it = begin(); it != end();) {
-    if (it->isInstance<Pad>()) {
-      SmartPointer<Pad> p = it->cast<Pad>();
-
-      Point p1(numeric_limits<int>::max(), numeric_limits<int>::max());
-      Point p2(-numeric_limits<int>::max(), -numeric_limits<int>::max());
-      p->bounds(p1, p2);
-
-      for (iterator it2 = begin(); it2 != end();) {
-        if (it2->isInstance<ElementLine>()) {
-          SmartPointer<ElementLine> l = it2->cast<ElementLine>();
-
-          int x = l->getThickness() / 2 + clear;
-          Segment2D s = l->getSegment();
-          Rectangle2D box(p1, p2);
-          Point offset(x, x);
-          box.add(Vector2D(p1 - offset));
-          box.add(Vector2D(p1 + offset));
-          box.add(Vector2D(p2 - offset));
-          box.add(Vector2D(p2 + offset));
-
-          bool contains1 = box.contains(s[0]);
-          bool contains2 = box.contains(s[1]);
-
-          if (contains1 && contains2) {
-            it2 = children.erase(it2);
-            changed = true;
-            continue;
-          }
-
-          Point p1, p2;
-          if (box.intersects(s, p1, p2)) {
-            int thickness = l->getThickness();
-            it2 = children.erase(it2);
-
-            if (contains1)
-              it2 =
-                children.insert(it2, new ElementLine(p1, s[1], thickness));
-
-            else if (contains2)
-              it2 = children.insert(it2, new ElementLine(p1, s[0], thickness));
-
-            else {
-              if (s[0].distance(p1) < s[0].distance(p2)) {
-                it2 =
-                  children.insert(it2, new ElementLine(p1, s[0], thickness));
-                it2++;
-                it2 =
-                  children.insert(it2, new ElementLine(p2, s[1], thickness));
-
-              } else {
-                it2 =
-                  children.insert(it2, new ElementLine(p1, s[1], thickness));
-                it2++;
-                it2 =
-                  children.insert(it2, new ElementLine(p2, s[0], thickness));
-              }
-
-            }
-
-            changed = true;
-          }
-        }
-
-        it2++;
-      }
-    }
-
-    it++;
-    if (it == children.end() && changed) {
-      changed = false;
-      it = children.begin();
-    }
-  }
-}
-
-
-void Element::flipX(double x) {
-  m.flipX(x);
-  t.flipX(0);
-  Parent::flipX(0);
-}
-
-
-void Element::flipY(double y) {
-  m.flipY(y);
-  t.flipY(0);
-  Parent::flipY(0);
-}
-
-
-void Element::textScale(int scale) {
-  tscale = scale;
-  Parent::textScale(scale);
-}
+void Element::setTextScale(unsigned scale) {setInteger(9, scale);}

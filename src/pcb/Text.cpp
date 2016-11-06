@@ -24,49 +24,6 @@ using namespace std;
 using namespace PCB;
 
 
-Text::Text() : Object("Text"), direction(0), scale(0) {}
-
-
-Text::Text(int direction, int scale, const string &text) :
-  Object("Text"), direction(direction), scale(0), text(text) {
-}
-
-
-void Text::rotate(const Point &center, double angle) {
-  p.rotate(center, angle);
-}
-
-
-void Text::translate(const Point &t) {
-  p += t;
-}
-
-
-void Text::multiply(double m) {
-  p.multiply(m);
-}
-
-
-void Text::round(int i) {
-  p.round(i);
-}
-
-
-void Text::bounds(Point &min, Point &max) const {
-  // TODO do better than this
-  p.bounds(min, max);
-}
-
-void Text::flipX(double x) {
-  p.flipX(x);
-}
-
-
-void Text::flipY(double y) {
-  p.flipY(y);
-}
-
-
-void Text::textScale(int scale) {
-  this->scale = scale;
+void Text::setTextScale(unsigned scale) {
+  if (!hasFlag(5, "lock")) setInteger(3, scale);
 }

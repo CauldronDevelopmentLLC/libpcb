@@ -29,35 +29,19 @@
 
 namespace PCB {
   struct Point : public cb::Vector2D {
-    Point(double x = 0, double y = 0) : cb::Vector2D(x, y) {}
-    Point(const cb::Vector2D &p) : cb::Vector2D(p) {}
+    Point(double x = 0, double y = 0) : cb::Vector2D(x, y) {validate();}
+    Point(const cb::Vector2D &p) : cb::Vector2D(p) {validate();}
 
-    // From Object
-    void rotate(const Point &center, double angle) {
-      // Translate
-      cb::Vector2D t = *this - center;
 
-      // Rotate
-      x() = t.x() * cos(angle) + t.y() * sin(angle);
-      y() = -t.x() * sin(angle) + t.y() * cos(angle);
-
-      // Translate back
-      *this += center;
+    void align(double grid) {
+      x() = Object::alignValue(x(), grid);
+      y() = Object::alignValue(y(), grid);
     }
 
-    void translate(const Point &t) {*this += t;}
-    void multiply(double m) {x() *= m; y() *= m;}
-    void round(int i) {Object::round(x(), i); Object::round(y(), i);}
 
-    void bounds(Point &min, Point &max) const {
-      if (x() < min.x()) min.x() = x();
-      if (y() < min.y()) min.y() = y();
-      if (max.x() < x()) max.x() = x();
-      if (max.y() < y()) max.y() = y();
+    void validate() const {
+      if (!isReal()) THROWS("Invalid Point(" << x() << ", " << y() << ")");
     }
-
-    void flipX(double x) {this->x() -= 2 * (this->x() - x);}
-    void flipY(double y) {this->y() -= 2 * (this->y() - y);}
   };
 }
 

@@ -22,27 +22,24 @@
 #define PCB_LINE_H
 
 #include "Object.h"
-#include "Point.h"
+
+#include <cbang/geom/Segment.h>
+
 
 namespace PCB {
   class Line : public Object {
-    Point p1;
-    Point p2;
-    int thickness;
-    int clearance;
-    std::string flags;
-
   public:
     Line() : Object("Line") {}
 
+    cb::Segment2D toSegment() const;
+    void setSegment(const cb::Segment2D &seg);
+
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int i);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
+    void align(double i);
+    void findAskew();
+    void findShort(double length);
+    void clearFound() {clearFlag(6, "found");}
+    bool isFound() {return getFlags(6).has("found");}
   };
 }
 

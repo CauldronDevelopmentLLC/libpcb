@@ -22,31 +22,15 @@
 #define PCB_PIN_H
 
 #include "Object.h"
-#include "Point.h"
+
 
 namespace PCB {
   class Pin : public Object {
-    Point p;
-    int thickness;
-    int clearance;
-    int mask;
-    int drill;
-    std::string name;
-    std::string number;
-    std::string flags;
-
   public:
-    Pin();
-    Pin(int drill, int pad, int clearance, int mask);
+    Pin() : Object("Pin") {}
 
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int i);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
+    void setPinThermals(const std::string &thermal);
   };
 }
 

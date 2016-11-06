@@ -39,9 +39,6 @@ namespace PCB {
     bool hasChildren() const {return !children.empty();}
     unsigned numChildren() const {return children.size();}
 
-    void findChildren(const std::string &name,
-                      std::vector<cb::SmartPointer<Object> > &children) const;
-
     typedef children_t::iterator iterator;
     typedef children_t::const_iterator const_iterator;
     iterator begin() {return children.begin();}
@@ -51,23 +48,17 @@ namespace PCB {
 
     void add(const cb::SmartPointer<Object> &o) {children.push_back(o);}
 
-    virtual void centerMark();
-    virtual void subtractMask(int clear);
-
-    Point findCenter();
-    void center();
-    virtual void merge(const Parent &o);
-
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int x);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
-    void lineSize(int size);
-    void textScale(int scale);
+    void align(double x);
+    void setViaThermals(const std::string &viaThermals);
+    void setPinThermals(const std::string &pinThermals);
+    void setSilkThickness(double thickness);
+    void setTextScale(unsigned scale);
+    void findAskew();
+    void findShort(double length);
+    void findContiguous();
+    void clearFound();
+    void removeFound();
 
     void parse(Tokenizer &tokenizer);
     void write(std::ostream &stream, unsigned depth) const;

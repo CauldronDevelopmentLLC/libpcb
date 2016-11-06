@@ -20,64 +20,15 @@
 
 #include "Via.h"
 
-#include <algorithm>
-
 using namespace std;
 using namespace PCB;
 
 
-Via::Via() : Object("Via"), thickness(0), clearance(0), mask(0), drill(0) {}
-
-
-Via::Via(int drill, int pad, int clearance, int mask) :
-  Object("Via"), thickness(drill + pad), clearance(clearance),
-  mask(drill + pad + mask), drill(drill) {
-  if (pad == 0) flags = "hole";
+void Via::align(double i) {
+  if (getFlags(7).isLocked()) return;
+  Object::align(0, i);
+  Object::align(1, i);
 }
 
 
-void Via::rotate(const Point &center, double angle) {
-  p.rotate(center, angle);
-}
-
-
-void Via::translate(const Point &t) {
-  p += t;
-}
-
-
-void Via::multiply(double m) {
-  p.multiply(m);
-  thickness *= m;
-  clearance *= m;
-  mask *= m;
-  drill *= m;
-}
-
-
-void Via::round(int i) {
-  p.round(i);
-  Object::round(thickness, i);
-  Object::round(clearance, i);
-  Object::round(mask, i);
-  Object::round(drill, i);
-}
-
-
-void Via::bounds(Point &min, Point &max) const {
-  int x = std::max(thickness, std::max(mask, drill)) / 2;
-  Point offset(x, x);
-
-  Point(p - offset).bounds(min, max);
-  Point(p + offset).bounds(min, max);
-}
-
-
-void Via::flipX(double x) {
-  p.flipX(x);
-}
-
-
-void Via::flipY(double y) {
-  p.flipY(y);
-}
+void Via::setViaThermals(const string &thermal) {setThermals(7, thermal);}

@@ -22,7 +22,7 @@
 #define PCB_PARSER_H
 
 #include "Tokenizer.h"
-#include "Layout.h"
+#include "Object.h"
 
 #include <cbang/SmartPointer.h>
 #include <cbang/io/InputSource.h>
@@ -31,8 +31,8 @@
 namespace PCB {
   class Parser {
   public:
-    cb::SmartPointer<Layout> parse(Tokenizer &tokenizer) const;
-    cb::SmartPointer<Layout> parse(const cb::InputSource &source) const;
+    cb::SmartPointer<Object> parse(Tokenizer &tokenizer) const;
+    cb::SmartPointer<Object> parse(const cb::InputSource &source) const;
   };
 }
 

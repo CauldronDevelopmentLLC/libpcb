@@ -26,6 +26,7 @@
 
 #include <vector>
 
+
 namespace PCB {
   class Polygon : public Object {
     std::vector<Point> points;
@@ -35,14 +36,7 @@ namespace PCB {
     Polygon(const std::string &name = "Polygon");
 
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int i);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
-
+    void align(double i);
     void parse(Tokenizer &tokenizer);
     void write(std::ostream &stream, unsigned depth) const;
   };

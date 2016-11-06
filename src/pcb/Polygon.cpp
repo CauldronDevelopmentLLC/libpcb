@@ -31,45 +31,11 @@ using namespace PCB;
 Polygon::Polygon(const std::string &name) : Object(name) {}
 
 
-void Polygon::rotate(const Point &center, double angle) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].rotate(center, angle);
-}
+void Polygon::align(double x) {
+  if (getFlags(0).isLocked()) return;
 
-
-void Polygon::translate(const Point &t) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i] += t;
-}
-
-
-void Polygon::multiply(double m) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].multiply(m);
-}
-
-
-void Polygon::round(int i) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].round(i);
-}
-
-
-void Polygon::bounds(Point &min, Point &max) const {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].bounds(min, max);
-}
-
-
-void Polygon::flipX(double x) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].flipX(x);
-}
-
-
-void Polygon::flipY(double y) {
-  for (unsigned int i = 0; i < points.size(); i++)
-    points[i].flipY(y);
+  for (unsigned i = 0; i < points.size(); i++)
+    points[i].align(x);
 }
 
 
@@ -116,7 +82,7 @@ void Polygon::write(std::ostream &stream, unsigned depth) const {
   // Body
   stream << '\n' << indent(depth) << '(';
 
-  for (unsigned int i = 0; i < points.size(); i++)
+  for (unsigned i = 0; i < points.size(); i++)
     // TODO output units
     stream << '\n' << indent(depth + 1)
            << '[' << formatReal(points[i].x())

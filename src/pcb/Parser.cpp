@@ -19,6 +19,7 @@
 \******************************************************************************/
 
 #include "Parser.h"
+#include "Layout.h"
 
 #include <cbang/parse/Scanner.h>
 
@@ -28,7 +29,7 @@ using namespace cb;
 using namespace PCB;
 
 
-SmartPointer<Layout> Parser::parse(PCB::Tokenizer &tokenizer) const {
+SmartPointer<Object> Parser::parse(PCB::Tokenizer &tokenizer) const {
   try {
     SmartPointer<Layout> layout = new Layout;
     layout->parse(tokenizer);
@@ -40,7 +41,7 @@ SmartPointer<Layout> Parser::parse(PCB::Tokenizer &tokenizer) const {
 }
 
 
-SmartPointer<Layout> Parser::parse(const InputSource &source) const {
+SmartPointer<Object> Parser::parse(const InputSource &source) const {
   Scanner scanner(source);
   PCB::Tokenizer tokenizer(scanner);
   return parse(tokenizer);

@@ -22,29 +22,15 @@
 #define PCB_TEXT_H
 
 #include "Object.h"
-#include "Point.h"
+
 
 namespace PCB {
   class Text : public Object {
-    Point p;
-    int direction;
-    int scale;
-    std::string text;
-    std::string flags;
-
   public:
-    Text();
-    Text(int direction, int scale, const std::string &text);
+    Text() : Object("Text") {}
 
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int i);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
-    void textScale(int scale);
+    void setTextScale(unsigned scale);
   };
 }
 

@@ -22,29 +22,15 @@
 #define PCB_ELEMENT_ARC_H
 
 #include "Object.h"
-#include "Point.h"
+
 
 namespace PCB {
   class ElementArc : public Object {
-    Point p;
-    int width;
-    int height;
-    int startAngle;
-    int deltaAngle;
-    int thickness;
-
   public:
     ElementArc() : Object("ElementArc") {}
 
     // From Object
-    void rotate(const Point &center, double angle);
-    void translate(const Point &t);
-    void multiply(double m);
-    void round(int i);
-    void bounds(Point &min, Point &max) const;
-    void flipX(double x);
-    void flipY(double x);
-    void lineSize(int size);
+    void setSilkThickness(double thickness);
   };
 }
 
