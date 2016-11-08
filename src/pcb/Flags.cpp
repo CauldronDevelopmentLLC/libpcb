@@ -20,77 +20,26 @@
 
 #include "Flags.h"
 
-#include <cbang/Exception.h>
-#include <cbang/String.h>
-
+#include <iostream>
 
 using namespace PCB;
 using namespace cb;
 using namespace std;
 
 
-Flags::Flags(const string &flags) {
-  string name;
-  string value;
-  bool inValue = false;
+void Flags::set(const string &name) {data.insertBoolean(name, true);}
 
-  for (unsigned i = 0; i < flags.size(); i++)
-    switch (flags[i]) {
-    case '(': inValue = true; break;
-    case ')': inValue = false; break;
 
-    case ',':
-      if (!inValue) {
-        if (name.empty()) THROWS("Empty flag in flags '" << flags << "'");
-        set(name, value);
-        name.clear();
-        value.clear();
-        break;
-      }
-
-    default:
-      if (inValue) value.append(1, flags[i]);
-      else name.append(1, flags[i]);
-      break;
-    }
-
-  if (inValue) THROWS("Unterminated value in flags '" << flags << "'");
-  if (!name.empty()) set(name, value);
+JSON::Value &Flags::get(const string &name) const {
+  return *data.get(name);
 }
 
 
-string Flags::toString() const {
-  string s;
-
-  for (flags_t::const_iterator it = flags.begin(); it != flags.end(); it++) {
-    if (it != flags.begin()) s += ",";
-    s += it->first;
-    if (!it->second.empty()) s += "(" + it->second + ")";
-  }
-
-  return s;
+void Flags::clear(const string &name) {
+  if (data.has(name)) data.insertBoolean(name, false);
 }
 
 
-void Flags::set(const string &flag, const string &value) {
-  pair<flags_t::iterator, bool> result =
-    flags.insert(flags_t::value_type(flag, value));
-
-  if (!result.second) result.first->second = value;
-}
-
-
-string Flags::get(const string &flag) const {
-  flags_t::const_iterator it = flags.find(flag);
-  if (it == flags.end()) THROWS("Flag '" << flag << "' not set");
-
-  return it->second;
-}
-
-
-void Flags::clear(const string &flag) {flags.erase(flag);}
-
-
-bool Flags::has(const string &flag) const {
-  return flags.find(flag) != flags.end();
+bool Flags::has(const string &name) const {
+  return data.has(name) && (!data.hasBoolean(name) || data.getBoolean(name));
 }

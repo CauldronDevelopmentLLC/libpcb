@@ -26,11 +26,39 @@ using namespace cb;
 using namespace PCB;
 
 
-void Element::align(double i) {
-  if (getFlags(0).isLocked()) return;
-  Object::align(4, i);
-  Object::align(5, i);
+Element::Element(JSON::Value &data) :
+  data(data), name(data.getString("name")), params(*data.get("params")),
+  children(data.hasList("children") ? data.get("children") : 0) {}
+
+
+bool Element::isLocked(const string &name) const {
+  return hasParam(name) && getFlags(name).has("lock");
 }
 
 
-void Element::setTextScale(unsigned scale) {setInteger(9, scale);}
+bool Element::isFound(const string &name) const {
+  return hasParam(name) && getFlags(name).has("found");
+}
+
+
+Flags Element::getFlags(const string &name) const {
+  return Flags(*params.get(name));
+}
+
+
+double Element::getNumber(const string &name) const {
+  return params.getNumber(name);
+}
+
+
+void Element::setNumber(const string &name, double x) {params.insert(name, x);}
+
+
+void Element::setThermals(const string &thermal) {
+  if (!getFlags().has("thermal")) return;
+
+  JSON::Value &flag = getFlags().get("thermal");
+
+  for (unsigned i = 0; i < flag.size(); i++)
+    flag.set(i, string(1, flag.getString(i)[0]) + thermal);
+}

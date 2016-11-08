@@ -18,24 +18,14 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#include "ClearFlag.h"
 
-#include <cbang/json/Value.h>
+using namespace PCB;
 
 
-namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
+void ClearFlag::visit(Element &e) {
+  if (e.hasParam("flags")) e.getFlags("flags").clear(flag);
+  if (e.hasParam("tflags")) e.getFlags("tflags").clear(flag);
 
-  public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
-  };
+  Visitor::visit(e);
 }
-
-#endif // PCB_FLAGS_H

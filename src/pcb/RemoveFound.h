@@ -18,24 +18,18 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#ifndef PCB_REMOVE_FOUND_H
+#define PCB_REMOVE_FOUND_H
 
-#include <cbang/json/Value.h>
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
-
+  class RemoveFound : public Visitor {
   public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
+    // From Visitor
+    void visit(Element &e);
   };
 }
 
-#endif // PCB_FLAGS_H
+#endif // PCB_REMOVE_FOUND_H

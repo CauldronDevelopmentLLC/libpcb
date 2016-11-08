@@ -1,0 +1,297 @@
+{
+  "Arc": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"],
+      ["width", "unit"],
+      ["height", "unit"],
+      ["thickness", "unit"],
+      ["clearance", "unit"],
+      ["start-angle", "int"],
+      ["delta-angle", "int"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "Attribute": {
+    "square": false,
+    "params": [
+      ["name", "string"],
+      ["value", "string"]
+    ]
+  },
+
+  "Connect": {
+    "square": false,
+    "params": [
+      ["name", "string"]
+    ]
+  },
+
+  "DRC": {
+    "square": true,
+    "params": [
+      ["bloat", "unit"],
+      ["shrink", "unit"],
+      ["line", "unit"],
+      ["silk", "unit"],
+      ["drill", "unit"],
+      ["ring", "unit"]
+    ]
+  },
+
+  "Element": {
+    "square": true,
+    "children": ["Attribute", "ElementLine", "ElementArc", "Pin", "Pad"],
+    "params": [
+      ["flags", "flags"],
+      ["description", "string"],
+      ["name", "string"],
+      ["value", "string"],
+      ["mx", "unit"],
+      ["my", "unit"],
+      ["tx", "unit"],
+      ["ty", "unit"],
+      ["tdir", "int"],
+      ["tscale", "int"],
+      ["tflags", "flags"]
+    ]
+  },
+
+  "ElementArc": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"],
+      ["width", "unit"],
+      ["height", "unit"],
+      ["start-angle", "int"],
+      ["delta-angle", "int"],
+      ["thickness", "unit"]
+    ]
+  },
+
+  "ElementLine": {
+    "square": true,
+    "params": [
+      ["x1", "unit"],
+      ["y1", "unit"],
+      ["x2", "unit"],
+      ["y2", "unit"],
+      ["thickness", "unit"]
+    ]
+  },
+
+  "FileVersion": {
+    "square": true,
+    "params": [
+      ["version", "int"]
+    ]
+  },
+
+  "Flags": {
+    "square": false,
+    "params": [
+      ["flags", "flags"]
+    ]
+  },
+
+  "Grid": {
+    "square": true,
+    "params": [
+      ["step", "unit"],
+      ["offset-x", "unit"],
+      ["offset-y", "unit"],
+      ["visible", "int"]
+    ]
+  },
+
+  "Groups": {
+    "square": false,
+    "params": [
+      ["groups", "string"]
+    ]
+  },
+
+  "Layer": {
+    "square": false,
+    "children": ["Line", "Polygon"],
+    "params": [
+      ["number", "int"],
+      ["name", "string"]
+    ]
+  },
+
+  "Line": {
+    "square": true,
+    "params": [
+      ["x1", "unit"],
+      ["y1", "unit"],
+      ["x2", "unit"],
+      ["y2", "unit"],
+      ["thickness", "unit"],
+      ["clearance", "unit"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "Mark": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"]
+    ]
+  },
+
+  "Net": {
+    "square": false,
+    "children": ["Connect"],
+    "params": [
+      ["name", "string"],
+      ["style", "string"]
+    ]
+  },
+
+  "NetList": {
+    "square": false,
+    "children": ["Net"],
+    "params": []
+  },
+
+  "Pad": {
+    "square": true,
+    "params": [
+      ["x1", "unit"],
+      ["y1", "unit"],
+      ["x2", "unit"],
+      ["y2", "unit"],
+      ["thickness", "unit"],
+      ["clearance", "unit"],
+      ["mask", "unit"],
+      ["name", "string"],
+      ["number", "string"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "PCB": {
+    "square": true,
+    "params": [
+      ["name", "string"],
+      ["width", "unit"],
+      ["height", "unit"]
+    ]
+  },
+
+  "Pin": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"],
+      ["thickness", "unit"],
+      ["clearance", "unit"],
+      ["mask", "unit"],
+      ["drill", "unit"],
+      ["name", "string"],
+      ["number", "string"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "Point": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"]
+    ]
+  },
+
+  "PolyArea": {
+    "square": true,
+    "params": [
+      ["area", "real"]
+    ]
+  },
+
+  "Polygon": {
+    "square": false,
+    "children": ["Hole", "Point"],
+    "params": [
+      ["flags", "flags"]
+    ]
+  },
+
+  "Rat": {
+    "square": true,
+    "params": [
+      ["x1", "unit"],
+      ["y1", "unit"],
+      ["group1", "int"],
+      ["x2", "unit"],
+      ["y2", "unit"],
+      ["group2", "int"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "Styles": {
+    "square": true,
+    "params": [
+      ["styles", "string"]
+    ]
+  },
+
+  "Symbol": {
+    "square": true,
+    "children": ["SymbolLine"],
+    "params": [
+      ["char", "char"],
+      ["delta", "unit"]
+    ]
+  },
+
+  "SymbolLine": {
+    "square": true,
+    "params": [
+      ["x1", "unit"],
+      ["y1", "unit"],
+      ["x2", "unit"],
+      ["y2", "unit"],
+      ["thickness", "unit"]
+    ]
+  },
+
+  "Text": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"],
+      ["direction", "int"],
+      ["scale", "int"],
+      ["text", "string"],
+      ["flags", "flags"]
+    ]
+  },
+
+  "Thermal": {
+    "square": true,
+    "params": [
+      ["scale", "real"]
+    ]
+  },
+
+  "Via": {
+    "square": true,
+    "params": [
+      ["x", "unit"],
+      ["y", "unit"],
+      ["thickness", "unit"],
+      ["clearance", "unit"],
+      ["mask", "unit"],
+      ["drill", "unit"],
+      ["name", "string"],
+      ["flags", "flags"]
+    ]
+  }
+}

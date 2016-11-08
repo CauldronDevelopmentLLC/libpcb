@@ -18,24 +18,19 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#include "FindAskew.h"
 
-#include <cbang/json/Value.h>
+#include <math.h>
+
+using namespace PCB;
 
 
-namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
+void FindAskew::line(Element &e) {
+  double x1 = e.getNumber("x1");
+  double y1 = e.getNumber("y1");
+  double x2 = e.getNumber("x2");
+  double y2 = e.getNumber("y2");
 
-  public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
-  };
+  if (x1 != x2 && y1 != y2 && 0.00001 < fabs(fabs(x1 - x2) - fabs(y1 - y2)))
+    e.getFlags().set("found");
 }
-
-#endif // PCB_FLAGS_H

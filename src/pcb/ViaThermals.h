@@ -18,23 +18,22 @@
 
 \******************************************************************************/
 
-#include "Layout.h"
+#ifndef PCB_VIA_THERMALS_H
+#define PCB_VIA_THERMALS_H
 
-#include <cbang/Exception.h>
-
-using namespace std;
-using namespace cb;
-using namespace PCB;
+#include "Visitor.h"
 
 
-void Layout::parse(Tokenizer &tokenizer) {
-  parseBody(tokenizer);
+namespace PCB {
+  class ViaThermals : public Visitor {
+    const std::string thermal;
+
+  public:
+    ViaThermals(const std::string &thermal) : thermal(thermal) {}
+
+    // From Visitor
+    void via(Element &e);
+  };
 }
 
-
-void Layout::write(ostream &stream, unsigned depth) const {
-  for (const_iterator it = begin(); it != end(); it++) {
-    (*it)->write(stream, depth);
-    stream << '\n';
-  }
-}
+#endif // PCB_VIA_THERMALS_H

@@ -18,10 +18,11 @@
 
 \******************************************************************************/
 
-#include "ElementArc.h"
+#include "Mask.h"
 
-using namespace std;
 using namespace PCB;
 
 
-void ElementArc::setSilkThickness(double thickness) {setDouble(6, thickness);}
+void Mask::setMask(Element &e) {
+  e.setNumber("mask", e.getNumber("thickness") + 2 * mask);
+}

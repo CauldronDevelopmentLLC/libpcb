@@ -18,24 +18,27 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#ifndef PCB_CLEARANCE_H
+#define PCB_CLEARANCE_H
 
-#include <cbang/json/Value.h>
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
+  class Clearance : public Visitor {
+    double clearance;
 
   public:
-    Flags(cb::JSON::Value &data) : data(data) {}
+    Clearance(double clearance) : clearance(clearance) {}
 
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
+    void setClearance(Element &e);
+
+    // From Visitor
+    void line(Element &e) {setClearance(e);}
+    void pad(Element &e) {setClearance(e);}
+    void pin(Element &e) {setClearance(e);}
+    void via(Element &e) {setClearance(e);}
   };
 }
 
-#endif // PCB_FLAGS_H
+#endif // PCB_CLEARANCE_H

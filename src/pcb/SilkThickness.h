@@ -18,20 +18,25 @@
 
 \******************************************************************************/
 
-#ifndef PCB_PIN_H
-#define PCB_PIN_H
+#ifndef PCB_SILK_THICKNESS_H
+#define PCB_SILK_THICKNESS_H
 
-#include "Object.h"
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Pin : public Object {
-  public:
-    Pin() : Object("Pin") {}
+  class SilkThickness : public Visitor {
+    double thickness;
 
-    // From Object
-    void setPinThermals(const std::string &thermal);
+  public:
+    SilkThickness(double thickness) : thickness(thickness) {}
+
+    void setThickness(Element &e);
+
+    // From Visitor
+    void elementArc(Element &e) {setThickness(e);}
+    void elementLine(Element &e) {setThickness(e);}
   };
 }
 
-#endif // PCB_PIN_H
+#endif // PCB_SILK_THICKNESS_H

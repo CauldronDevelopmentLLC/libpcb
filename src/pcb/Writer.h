@@ -18,21 +18,29 @@
 
 \******************************************************************************/
 
-#ifndef PCB_LAYOUT_H
-#define PCB_LAYOUT_H
+#ifndef PCB_WRITER_H
+#define PCB_WRITER_H
 
-#include "Parent.h"
+#include <cbang/io/OutputSink.h>
+#include <cbang/json/Value.h>
 
 
 namespace PCB {
-  class Layout : public Parent {
-  public:
-    Layout() : Parent("Layout") {}
+  class Writer {
+    cb::OutputSink sink;
+    std::ostream &stream;
 
-    // From Object
-    void parse(Tokenizer &tokenizer);
-    void write(std::ostream &stream, unsigned depth = 0) const;
+  public:
+    Writer(const cb::OutputSink &sink) : sink(sink), stream(sink.getStream()) {}
+
+    void write(const cb::JSON::Value &pcb, unsigned depth = 0) const;
+
+    void writeFlags(const cb::JSON::Value &e) const;
+    void writeHead(const cb::JSON::Value &e,
+                   const cb::JSON::Value &templ) const;
+
+    void indent(unsigned depth) const;
   };
 }
 
-#endif // PCB_LAYOUT_H
+#endif // PCB_WRITER_H

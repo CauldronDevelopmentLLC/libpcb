@@ -18,28 +18,26 @@
 
 \******************************************************************************/
 
-#ifndef PCB_POLYGON_H
-#define PCB_POLYGON_H
+#ifndef PCB_MASK_H
+#define PCB_MASK_H
 
-#include "Object.h"
-#include "Point.h"
-
-#include <vector>
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Polygon : public Object {
-    std::vector<Point> points;
-    std::string flags;
+  class Mask : public Visitor {
+    double mask;
 
   public:
-    Polygon(const std::string &name = "Polygon");
+    Mask(double mask) : mask(mask) {}
 
-    // From Object
-    void align(double i);
-    void parse(Tokenizer &tokenizer);
-    void write(std::ostream &stream, unsigned depth) const;
+    void setMask(Element &e);
+
+    // From Visitor
+    void pad(Element &e) {setMask(e);}
+    void pin(Element &e) {setMask(e);}
+    void via(Element &e) {setMask(e);}
   };
 }
 
-#endif // PCB_POLYGON_H
+#endif // PCB_MASK_H

@@ -18,20 +18,22 @@
 
 \******************************************************************************/
 
-#ifndef PCB_TEXT_H
-#define PCB_TEXT_H
+#ifndef PCB_PIN_THERMALS_H
+#define PCB_PIN_THERMALS_H
 
-#include "Object.h"
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Text : public Object {
-  public:
-    Text() : Object("Text") {}
+  class PinThermals : public Visitor {
+    const std::string thermal;
 
-    // From Object
-    void setTextScale(unsigned scale);
+  public:
+    PinThermals(const std::string &thermal) : thermal(thermal) {}
+
+    // From Visitor
+    void pin(Element &e);
   };
 }
 
-#endif // PCB_TEXT_H
+#endif // PCB_PIN_THERMALS_H

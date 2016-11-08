@@ -18,24 +18,8 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#include "PinThermals.h"
 
-#include <cbang/json/Value.h>
+using namespace PCB;
 
-
-namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
-
-  public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
-  };
-}
-
-#endif // PCB_FLAGS_H
+void PinThermals::pin(Element &e) {e.setThermals(thermal);}

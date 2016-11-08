@@ -18,20 +18,22 @@
 
 \******************************************************************************/
 
-#ifndef PCB_ELEMENT_LINE_H
-#define PCB_ELEMENT_LINE_H
+#ifndef PCB_CLEAR_FLAG_H
+#define PCB_CLEAR_FLAG_H
 
-#include "Object.h"
+#include "Visitor.h"
 
 
 namespace PCB {
-  class ElementLine : public Object {
-  public:
-    ElementLine() : Object("ElementLine") {}
+  class ClearFlag : public Visitor {
+    const std::string flag;
 
-    // From Object
-    void setSilkThickness(double thickness);
+  public:
+    ClearFlag(const std::string &flag) : flag(flag) {}
+
+    // From Visitor
+    void visit(Element &e);
   };
 }
 
-#endif // PCB_ELEMENT_LINE_H
+#endif // PCB_CLEAR_FLAG_H

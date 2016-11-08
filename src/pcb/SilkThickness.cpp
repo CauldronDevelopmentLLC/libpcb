@@ -18,25 +18,11 @@
 
 \******************************************************************************/
 
-#ifndef PCB_SPECIAL_VALUE_H
-#define PCB_SPECIAL_VALUE_H
+#include "SilkThickness.h"
 
-#include "Object.h"
+using namespace PCB;
 
 
-namespace PCB {
-  class SpecialValue : public Object {
-    double value;
-
-  public:
-    SpecialValue(const std::string &name) : Object(name) {}
-
-    double getValue() const {return value;}
-
-    // From Object
-    void parse(Tokenizer &tokenizer);
-    void write(std::ostream &stream, unsigned depth = 0) const;
-  };
+void SilkThickness::setThickness(Element &e) {
+  e.setNumber("thickness", thickness);
 }
-
-#endif // PCB_SPECIAL_VALUE_H

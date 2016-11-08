@@ -6,7 +6,7 @@ try:
 except Exception, e:
     raise Exception, 'CBANG_HOME not set?\n' + str(e)
 
-env.CBLoadTools('compiler cbang dist')
+env.CBLoadTools('compiler cbang dist resources')
 conf = env.CBConfigure()
 
 # Dist
@@ -23,6 +23,9 @@ if 'dist' in COMMAND_LINE_TARGETS:
     tar = env.TarBZ2Dist('libpcb', files)
     Alias('dist', tar)
     Return()
+
+
+env.Replace(RESOURCES_NS = 'PCB')
 
 
 if not env.GetOption('clean'):
@@ -45,6 +48,11 @@ import re
 VariantDir('build', 'src')
 src = map(lambda path: re.sub(r'^src/', 'build/', str(path)), src)
 env.AppendUnique(CPPPATH = ['#/build'])
+
+
+# Resources
+res = env.Resources('build/resources.cpp', ['#/src/resources'])
+src.append(res)
 
 
 # Build

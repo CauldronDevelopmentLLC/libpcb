@@ -18,24 +18,23 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#ifndef PCB_TEXT_SCALE_H
+#define PCB_TEXT_SCALE_H
 
-#include <cbang/json/Value.h>
+#include "Visitor.h"
 
 
 namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
+  class TextScale : public Visitor {
+    unsigned scale;
 
   public:
-    Flags(cb::JSON::Value &data) : data(data) {}
+    TextScale(unsigned scale) : scale(scale) {}
 
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
+    // From Visitor
+    void element(Element &e);
+    void text(Element &e);
   };
 }
 
-#endif // PCB_FLAGS_H
+#endif // PCB_TEXT_SCALE_H

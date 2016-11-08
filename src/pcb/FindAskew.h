@@ -18,31 +18,18 @@
 
 \******************************************************************************/
 
-#ifndef PCB_POINT_H
-#define PCB_POINT_H
+#ifndef PCB_FIND_ASKEW_H
+#define PCB_FIND_ASKEW_H
 
-#include "Object.h"
-
-#include <cbang/geom/Vector.h>
-#include <cbang/Math.h>
+#include "Visitor.h"
 
 
 namespace PCB {
-  struct Point : public cb::Vector2D {
-    Point(double x = 0, double y = 0) : cb::Vector2D(x, y) {validate();}
-    Point(const cb::Vector2D &p) : cb::Vector2D(p) {validate();}
-
-
-    void align(double grid) {
-      x() = Object::alignValue(x(), grid);
-      y() = Object::alignValue(y(), grid);
-    }
-
-
-    void validate() const {
-      if (!isReal()) THROWS("Invalid Point(" << x() << ", " << y() << ")");
-    }
+  class FindAskew : public Visitor {
+  public:
+    // From Visitor
+    void line(Element &e);
   };
 }
 
-#endif // PCB_POINT_H
+#endif // PCB_FIND_ASKEW_H

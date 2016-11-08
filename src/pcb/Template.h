@@ -18,10 +18,18 @@
 
 \******************************************************************************/
 
-#include "ElementLine.h"
+#ifndef PCB_TEMPLATE_H
+#define PCB_TEMPLATE_H
 
-using namespace std;
-using namespace PCB;
+#include <cbang/json/Value.h>
 
 
-void ElementLine::setSilkThickness(double thickness) {setDouble(4, thickness);}
+namespace PCB {
+  class Template {
+    static cb::SmartPointer<cb::JSON::Value> templ;
+  public:
+    static const cb::JSON::Value &get(const std::string &keyword);
+  };
+}
+
+#endif // PCB_TEMPLATE_H

@@ -18,12 +18,15 @@
 
 \******************************************************************************/
 
-#include "Text.h"
+#include "FindShort.h"
+#include "Line.h"
 
-using namespace std;
+#include <cbang/geom/Segment.h>
+
+using namespace cb;
 using namespace PCB;
 
 
-void Text::setTextScale(unsigned scale) {
-  if (!hasFlag(5, "lock")) setInteger(3, scale);
+void FindShort::line(Element &e) {
+  if (Line(e).getSegment().length() <= length) e.getFlags().set("found");
 }

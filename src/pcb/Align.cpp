@@ -18,24 +18,53 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#include "Align.h"
+#include "Flags.h"
 
-#include <cbang/json/Value.h>
+#include <cbang/Math.h>
+
+using namespace std;
+using namespace cb;
+using namespace PCB;
 
 
-namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
-
-  public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
-  };
+Align::Align(double grid) : grid(grid) {
+  if (!grid) THROW("Cannot align to zero");
 }
 
-#endif // PCB_FLAGS_H
+
+void Align::align(Element &e, const std::string &key) const {
+  e.setNumber(key, grid * Math::round(e.getNumber(key) / grid));
+}
+
+
+void Align::element(Element &e) {
+  if (e.isLocked()) return;
+
+  align(e, "mx");
+  align(e, "my");
+}
+
+
+void Align::line(Element &e) {
+  if (e.isLocked()) return;
+
+  align(e, "x1");
+  align(e, "y1");
+  align(e, "x2");
+  align(e, "y2");
+}
+
+
+void Align::point(Element &e) {
+  align(e, "x");
+  align(e, "y");
+}
+
+
+void Align::via(Element &e) {
+  if (e.isLocked()) return;
+
+  align(e, "x");
+  align(e, "y");
+}

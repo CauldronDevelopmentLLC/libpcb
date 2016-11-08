@@ -19,6 +19,18 @@
 \******************************************************************************/
 
 #include <pcb/PCB.h>
+#include <pcb/Align.h>
+#include <pcb/ClearFlag.h>
+#include <pcb/Mask.h>
+#include <pcb/Clearance.h>
+#include <pcb/TextScale.h>
+#include <pcb/SilkThickness.h>
+#include <pcb/ViaThermals.h>
+#include <pcb/PinThermals.h>
+#include <pcb/FindShort.h>
+#include <pcb/FindAskew.h>
+#include <pcb/FindContiguous.h>
+#include <pcb/RemoveFound.h>
 
 #include <cbang/Exception.h>
 #include <cbang/Application.h>
@@ -26,6 +38,7 @@
 #include <cbang/io/Reader.h>
 #include <cbang/log/Logger.h>
 #include <cbang/os/SystemUtilities.h>
+#include <cbang/json/Writer.h>
 
 #include <iostream>
 
@@ -37,6 +50,7 @@ using namespace PCB;
 namespace PCB {
   class PCBTool : public cb::Application, public cb::Reader {
     bool inplace;
+    bool json;
     double align;
     bool findAskew;
     double findShort;
@@ -46,14 +60,18 @@ namespace PCB {
     string pinThermals;
     double silkThickness;
     unsigned textScale;
+    double mask;
+    double clearance;
 
   public:
     PCBTool() :
-      Application("PCB Tool", &PCBTool::_hasFeature), inplace(false), align(0),
-      findAskew(false), findShort(0), removeContiguous(false), remove(false),
-      silkThickness(0), textScale(0) {
+      Application("PCB Tool", &PCBTool::_hasFeature), inplace(false),
+      json(false), align(0), findAskew(false), findShort(0),
+      removeContiguous(false), remove(false), silkThickness(0), textScale(0),
+      mask(0), clearance(0) {
       cmdLine.addTarget("inplace", inplace, "Do file changes inplace instead "
                         "of outputing to standard out.", 'i');
+      cmdLine.addTarget("json", json, "Output in JSON format.", 'j');
       cmdLine.addTarget("align", align, "Align to grid");
       cmdLine.addTarget("find-askew", findAskew, "Find all lines which are "
                         "not at a multiple of 45 degrees.");
@@ -69,6 +87,11 @@ namespace PCB {
                         "Valid values are 'S', 'X', '+' or ''");
       cmdLine.addTarget("silk-thickness", silkThickness, "Set all silk line "
                         "thicknesses in mm.");
+      cmdLine.addTarget("mask", mask, "Set solder mask opening on all "
+                        "pads, pins and vias in mm.");
+      cmdLine.addTarget("clearance", clearance, "Set clearance on all lines, "
+                        "pads, pins and vias in mm where current clearance is "
+                        "non-zero.");
       cmdLine.addTarget("text-scale", textScale, "Set all text scales.");
 
       // Force 'C' locale, otherwise double parsing is messed up.
@@ -104,31 +127,42 @@ namespace PCB {
 
     // From cb::Reader
     void read(const InputSource &source) {
-      SmartPointer<PCB::Object> layout = PCB::Parser().parse(source);
+      // Input
+      SmartPointer<JSON::Value> layout = PCB::Parser().parse(source);
 
-      layout->clearFound();
+      // Process
+      (ClearFlag("found"))(*layout);
 
       if (removeContiguous) {
-        layout->findContiguous();
-        layout->removeFound();
+        ((FindContiguous()))(*layout);
+        ((RemoveFound()))(*layout);
       }
 
-      if (align) layout->align(align);
+      if (align) (Align(align))(*layout);
+      if (mask) (Mask(mask))(*layout);
+      if (clearance) (Clearance(clearance))(*layout);
+      if (textScale) (TextScale(textScale))(*layout);
+      if (silkThickness) (SilkThickness(silkThickness))(*layout);
       if (cmdLine["--via-thermals"].isSet())
-        layout->setViaThermals(viaThermals);
+        (ViaThermals(viaThermals))(*layout);
       if (cmdLine["--pin-thermals"].isSet())
-        layout->setPinThermals(pinThermals);
-      if (silkThickness) layout->setSilkThickness(silkThickness);
-      if (findAskew) layout->findAskew();
-      if (findShort) layout->findShort(findShort);
-      if (remove) layout->removeFound();
-      if (textScale) layout->setTextScale(textScale);
+        (PinThermals(pinThermals))(*layout);
 
+      if (findShort) (FindShort(findShort))(*layout);
+      if (findAskew) ((FindAskew()))(*layout);
+
+      if (remove) ((RemoveFound()))(*layout);
+
+      // Output
       SmartPointer<ostream> stream;
       if (inplace) stream = SystemUtilities::oopen(source.getName());
       else stream = SmartPointer<ostream>::Phony(&cout);
 
-      layout->write(*stream);
+      if (json) {
+        JSON::Writer writer(*stream);
+        layout->write(writer);
+
+      } else Writer(*stream).write(*layout);
     }
   };
 }

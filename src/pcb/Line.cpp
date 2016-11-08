@@ -20,47 +20,19 @@
 
 #include "Line.h"
 
-#include <math.h>
-
-using namespace std;
 using namespace cb;
 using namespace PCB;
 
 
-Segment2D Line::toSegment() const {
-  return Segment2D(Vector2D(getDouble(0), getDouble(1)),
-                   Vector2D(getDouble(2), getDouble(3)));
+Segment2D Line::getSegment() const {
+  return Segment2D(Vector2D(getNumber("x1"), getNumber("y1")),
+                   Vector2D(getNumber("x2"), getNumber("y2")));
 }
 
 
 void Line::setSegment(const Segment2D &seg) {
-  setDouble(0, seg[0].x());
-  setDouble(1, seg[0].y());
-  setDouble(2, seg[1].x());
-  setDouble(3, seg[1].y());
-}
-
-
-void Line::align(double i) {
-  if (getFlags(6).isLocked()) return;
-  Object::align(0, i);
-  Object::align(1, i);
-  Object::align(2, i);
-  Object::align(3, i);
-}
-
-
-void Line::findAskew() {
-  double x1 = getDouble(0);
-  double y1 = getDouble(1);
-  double x2 = getDouble(2);
-  double y2 = getDouble(3);
-
-  if (x1 != x2 && y1 != y2 && 0.00001 < fabs(fabs(x1 - x2) - fabs(y1 - y2)))
-    setFlag(6, "found");
-}
-
-
-void Line::findShort(double length) {
-  if (toSegment().length() <= length) setFlag(6, "found");
+  setNumber("x1", seg[0].x());
+  setNumber("y1", seg[0].y());
+  setNumber("x2", seg[1].x());
+  setNumber("y2", seg[1].y());
 }

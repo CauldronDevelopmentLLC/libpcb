@@ -18,21 +18,29 @@
 
 \******************************************************************************/
 
-#ifndef PCB_VIA_H
-#define PCB_VIA_H
+#ifndef PCB_ALIGN_H
+#define PCB_ALIGN_H
 
-#include "Object.h"
+#include "Visitor.h"
+
+#include <cbang/json/Number.h>
 
 
 namespace PCB {
-  class Via : public Object {
-  public:
-    Via() : Object("Via") {}
+  class Align : public Visitor {
+    double grid;
 
-    // From Object
-    void align(double i);
-    void setViaThermals(const std::string &thermal);
+  public:
+    Align(double grid);
+
+    void align(Element &e, const std::string &key) const;
+
+    // From Visitor
+    void element(Element &e);
+    void line(Element &e);
+    void point(Element &e);
+    void via(Element &e);
   };
 }
 
-#endif // PCB_VIA_H
+#endif // PCB_ALIGN_H

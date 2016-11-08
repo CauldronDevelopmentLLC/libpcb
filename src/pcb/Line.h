@@ -21,25 +21,19 @@
 #ifndef PCB_LINE_H
 #define PCB_LINE_H
 
-#include "Object.h"
+#include "Element.h"
 
 #include <cbang/geom/Segment.h>
 
 
 namespace PCB {
-  class Line : public Object {
+  class Line : public Element {
   public:
-    Line() : Object("Line") {}
+    Line(const Element &e) : Element(e.getData()) {}
+    Line(cb::JSON::Value &data) : Element(data) {}
 
-    cb::Segment2D toSegment() const;
+    cb::Segment2D getSegment() const;
     void setSegment(const cb::Segment2D &seg);
-
-    // From Object
-    void align(double i);
-    void findAskew();
-    void findShort(double length);
-    void clearFound() {clearFlag(6, "found");}
-    bool isFound() {return getFlags(6).has("found");}
   };
 }
 

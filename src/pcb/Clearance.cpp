@@ -18,23 +18,11 @@
 
 \******************************************************************************/
 
-#include "SpecialValue.h"
+#include "Clearance.h"
 
-#include <cbang/String.h>
-
-using namespace std;
-using namespace cb;
 using namespace PCB;
 
 
-void SpecialValue::parse(Tokenizer &tokenizer) {
-  tokenizer.match(ID_TOKEN);
-  tokenizer.match(OBRACKET_TOKEN);
-  value = String::parseDouble(tokenizer.match(REAL_TOKEN).getValue());
-  tokenizer.match(CBRACKET_TOKEN);
-}
-
-
-void SpecialValue::write(std::ostream &stream, unsigned depth) const {
-  stream << getName() << String::printf("[%0.6f]", value);
+void Clearance::setClearance(Element &e) {
+  if (0 < e.getNumber("clearance")) e.setNumber("clearance", clearance * 2);
 }

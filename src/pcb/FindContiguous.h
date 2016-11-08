@@ -18,17 +18,18 @@
 
 \******************************************************************************/
 
-#include "Via.h"
+#ifndef PCB_FIND_CONTIGUOUS_H
+#define PCB_FIND_CONTIGUOUS_H
 
-using namespace std;
-using namespace PCB;
+#include "Visitor.h"
 
 
-void Via::align(double i) {
-  if (getFlags(7).isLocked()) return;
-  Object::align(0, i);
-  Object::align(1, i);
+namespace PCB {
+  class FindContiguous : public Visitor {
+  public:
+    // From Visitor
+    void layer(Element &e);
+  };
 }
 
-
-void Via::setViaThermals(const string &thermal) {setThermals(7, thermal);}
+#endif // PCB_FIND_CONTIGUOUS_H

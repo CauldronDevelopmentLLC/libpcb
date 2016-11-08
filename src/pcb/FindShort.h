@@ -18,10 +18,22 @@
 
 \******************************************************************************/
 
-#include "Pin.h"
+#ifndef PCB_FIND_SHORT_H
+#define PCB_FIND_SHORT_H
 
-using namespace std;
-using namespace PCB;
+#include "Visitor.h"
 
 
-void Pin::setPinThermals(const string &thermal) {setThermals(8, thermal);}
+namespace PCB {
+  class FindShort : public Visitor {
+    double length;
+
+  public:
+    FindShort(double length) : length(length) {}
+
+    // From Visitor
+    void line(Element &e);
+  };
+}
+
+#endif // PCB_FIND_SHORT_H

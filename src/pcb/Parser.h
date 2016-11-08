@@ -22,17 +22,28 @@
 #define PCB_PARSER_H
 
 #include "Tokenizer.h"
-#include "Object.h"
+#include "TokenType.h"
 
 #include <cbang/SmartPointer.h>
 #include <cbang/io/InputSource.h>
+#include <cbang/json/Value.h>
 
 
 namespace PCB {
-  class Parser {
+  class Parser : public TokenType {
   public:
-    cb::SmartPointer<Object> parse(Tokenizer &tokenizer) const;
-    cb::SmartPointer<Object> parse(const cb::InputSource &source) const;
+    void parse(Tokenizer &tokenizer, cb::JSON::Sink &sink) const;
+    cb::JSON::ValuePtr parse(const cb::InputSource &source) const;
+
+    void parseFlagValues(std::string::const_iterator &it,
+                         const std::string::const_iterator &end,
+                         cb::JSON::Sink &sink) const;
+    void parseFlags(const std::string &flags, cb::JSON::Sink &sink) const;
+    void parseHead(Tokenizer &tokenizer, cb::JSON::Sink &sink,
+                   const cb::JSON::Value &templ) const;
+    void parseElement(Tokenizer &tokenizer, const std::string &name,
+                      cb::JSON::Sink &sink) const;
+    void parseBody(Tokenizer &tokenizer, cb::JSON::Sink &sink) const;
   };
 }
 

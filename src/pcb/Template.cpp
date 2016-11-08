@@ -18,20 +18,33 @@
 
 \******************************************************************************/
 
-#ifndef PCB_ELEMENT_ARC_H
-#define PCB_ELEMENT_ARC_H
+#include "Template.h"
 
-#include "Object.h"
+#include <cbang/util/Resource.h>
+#include <cbang/json/Reader.h>
+#include <cbang/json/Dict.h>
 
+using namespace std;
+using namespace cb;
+using namespace PCB;
 
 namespace PCB {
-  class ElementArc : public Object {
-  public:
-    ElementArc() : Object("ElementArc") {}
-
-    // From Object
-    void setSilkThickness(double thickness);
-  };
+  extern const DirectoryResource resource0;
 }
 
-#endif // PCB_ELEMENT_ARC_H
+
+SmartPointer<JSON::Value> Template::templ;
+
+
+const JSON::Value &Template::get(const string &keyword) {
+  if (templ.isNull()) {
+    stringstream str;
+    str << resource0.get("template.json");
+    templ = JSON::Reader::parse(str);
+  }
+
+  if (!templ->hasDict(keyword))
+    THROWS("Unrecognized keyword '" << keyword << "'");
+
+  return templ->getDict(keyword);
+}

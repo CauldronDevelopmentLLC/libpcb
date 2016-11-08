@@ -21,17 +21,40 @@
 #ifndef PCB_ELEMENT_H
 #define PCB_ELEMENT_H
 
-#include "Parent.h"
+#include "Flags.h"
+
+#include <cbang/json/Value.h>
 
 
 namespace PCB {
-  class Element : public Parent {
-  public:
-    Element() : Parent("Element") {}
+  class Element {
+    cb::JSON::Value &data;
+    const std::string name;
+    cb::JSON::Value &params;
+    cb::JSON::ValuePtr children;
 
-    // From Object
-    void align(double i);
-    void setTextScale(unsigned scale);
+  public:
+    Element(cb::JSON::Value &data);
+
+    cb::JSON::Value &getData() const {return data;}
+    const std::string &getName() const {return name;}
+
+    bool hasParam(const std::string &name) const {return params.has(name);}
+
+    bool isLocked(const std::string &name = "flags") const;
+    bool isFound(const std::string &name = "flags") const;
+
+    Flags getFlags(const std::string &name = "flags") const;
+
+    double getNumber(const std::string &name) const;
+    void setNumber(const std::string &name, double x);
+
+    void setThermals(const std::string &thermal);
+
+    bool hasChildren() const {return !children.isNull();}
+    cb::JSON::Value &getChildren() {return *children;}
+
+    void remove() {data.insertBoolean("remove", true);}
   };
 }
 

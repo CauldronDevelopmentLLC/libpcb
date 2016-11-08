@@ -18,24 +18,16 @@
 
 \******************************************************************************/
 
-#ifndef PCB_FLAGS_H
-#define PCB_FLAGS_H
+#include "TextScale.h"
 
-#include <cbang/json/Value.h>
+using namespace PCB;
 
 
-namespace PCB {
-  class Flags {
-    cb::JSON::Value &data;
-
-  public:
-    Flags(cb::JSON::Value &data) : data(data) {}
-
-    void set(const std::string &name);
-    cb::JSON::Value &get(const std::string &name) const;
-    void clear(const std::string &name);
-    bool has(const std::string &name) const;
-  };
+void TextScale::element(Element &e) {
+  if (!e.isLocked()) e.setNumber("tscale", scale);
 }
 
-#endif // PCB_FLAGS_H
+
+void TextScale::text(Element &e) {
+  if (!e.isLocked()) e.setNumber("scale", scale);
+}
