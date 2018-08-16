@@ -119,7 +119,8 @@
     "children": ["Line", "Polygon"],
     "params": [
       ["number", "int"],
-      ["name", "string"]
+      ["name", "string"],
+      ["flags", "flags"]
     ]
   },
 
