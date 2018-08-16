@@ -24,5 +24,6 @@ using namespace PCB;
 
 
 void Mask::setMask(Element &e) {
-  e.setNumber("mask", e.getNumber("thickness") + 2 * mask);
+  double m = e.getNumber("thickness") + 2 * mask;
+  if (!minimum || e.getNumber("mask") < m) e.setNumber("mask", m);
 }

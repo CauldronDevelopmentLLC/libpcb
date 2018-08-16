@@ -18,27 +18,18 @@
 
 \******************************************************************************/
 
-#ifndef PCB_MASK_H
-#define PCB_MASK_H
+#ifndef PCB_FIND_LOCKED_H
+#define PCB_FIND_LOCKED_H
 
 #include "Visitor.h"
 
 
 namespace PCB {
-  class Mask : public Visitor {
-    double mask;
-    bool minimum;
-
+  class FindLocked : public Visitor {
   public:
-    Mask(double mask, bool minimum = false) : mask(mask), minimum(minimum) {}
-
-    void setMask(Element &e);
-
     // From Visitor
-    void pad(Element &e) {setMask(e);}
-    void pin(Element &e) {setMask(e);}
-    void via(Element &e) {setMask(e);}
+    void visit(Element &e);
   };
 }
 
-#endif // PCB_MASK_H
+#endif // PCB_FIND_LOCKED_H

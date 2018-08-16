@@ -18,27 +18,17 @@
 
 \******************************************************************************/
 
-#ifndef PCB_MASK_H
-#define PCB_MASK_H
+#ifndef PCB_SELECT_FOUND_H
+#define PCB_SELECT_FOUND_H
 
 #include "Visitor.h"
 
 
 namespace PCB {
-  class Mask : public Visitor {
-    double mask;
-    bool minimum;
-
+  class SelectFound : public Visitor {
   public:
-    Mask(double mask, bool minimum = false) : mask(mask), minimum(minimum) {}
-
-    void setMask(Element &e);
-
-    // From Visitor
-    void pad(Element &e) {setMask(e);}
-    void pin(Element &e) {setMask(e);}
-    void via(Element &e) {setMask(e);}
+    void visit(Element &e);
   };
 }
 
-#endif // PCB_MASK_H
+#endif // PCB_SELECT_FOUND_H

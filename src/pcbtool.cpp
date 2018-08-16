@@ -28,9 +28,11 @@
 #include <pcb/ViaThermals.h>
 #include <pcb/PinThermals.h>
 #include <pcb/FindShort.h>
+#include <pcb/FindLocked.h>
 #include <pcb/FindAskew.h>
 #include <pcb/FindContiguous.h>
 #include <pcb/RemoveFound.h>
+#include <pcb/SelectFound.h>
 
 #include <cbang/Exception.h>
 #include <cbang/Application.h>
@@ -54,6 +56,7 @@ namespace PCB {
     double align;
     bool findAskew;
     double findShort;
+    bool findLocked;
     bool removeContiguous;
     bool remove;
     string viaThermals;
@@ -61,14 +64,16 @@ namespace PCB {
     double silkThickness;
     unsigned textScale;
     double mask;
+    double minMask;
     double clearance;
+    bool select;
 
   public:
     PCBTool() :
       Application("PCB Tool", &PCBTool::_hasFeature), inplace(false),
-      json(false), align(0), findAskew(false), findShort(0),
+      json(false), align(0), findAskew(false), findShort(0), findLocked(false),
       removeContiguous(false), remove(false), silkThickness(0), textScale(0),
-      mask(0), clearance(0) {
+      mask(0), minMask(0), clearance(0), select(false) {
       cmdLine.addTarget("inplace", inplace, "Do file changes inplace instead "
                         "of outputing to standard out.", 'i');
       cmdLine.addTarget("json", json, "Output in JSON format.", 'j');
@@ -77,6 +82,7 @@ namespace PCB {
                         "not at a multiple of 45 degrees.");
       cmdLine.addTarget("find-short", findShort, "Find all lines which are less"
                         " than length.");
+      cmdLine.addTarget("find-locked", findLocked, "Find all locked items.");
       cmdLine.addTarget("remove-contiguous", removeContiguous, "Find lines "
                         "which either overlap or are connected in a straight "
                         "line and replace them with a single line.");
@@ -89,10 +95,13 @@ namespace PCB {
                         "thicknesses in mm.");
       cmdLine.addTarget("mask", mask, "Set solder mask opening on all "
                         "pads, pins and vias in mm.");
+      cmdLine.addTarget("min-mask", minMask, "Set minimum solder mask opening "
+                        "on all pads, pins and vias in mm.");
       cmdLine.addTarget("clearance", clearance, "Set clearance on all lines, "
                         "pads, pins and vias in mm where current clearance is "
                         "non-zero.");
       cmdLine.addTarget("text-scale", textScale, "Set all text scales.");
+      cmdLine.addTarget("select", select, "Select found items.");
 
       // Force 'C' locale, otherwise double parsing is messed up.
       cb::SystemUtilities::setenv("LC_NUMERIC", "C");
@@ -140,6 +149,7 @@ namespace PCB {
 
       if (align) (Align(align))(*layout);
       if (mask) (Mask(mask))(*layout);
+      if (minMask) (Mask(mask, true))(*layout);
       if (clearance) (Clearance(clearance))(*layout);
       if (textScale) (TextScale(textScale))(*layout);
       if (silkThickness) (SilkThickness(silkThickness))(*layout);
@@ -149,9 +159,11 @@ namespace PCB {
         (PinThermals(pinThermals))(*layout);
 
       if (findShort) (FindShort(findShort))(*layout);
+      if (findLocked) ((FindLocked()))(*layout);
       if (findAskew) ((FindAskew()))(*layout);
 
       if (remove) ((RemoveFound()))(*layout);
+      if (select) ((SelectFound()))(*layout);
 
       // Output
       SmartPointer<ostream> stream;
