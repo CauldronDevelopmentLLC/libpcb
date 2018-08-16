@@ -46,8 +46,7 @@ void Parser::parse(PCB::Tokenizer &tokenizer, JSON::Sink &sink) const {
 
 
 JSON::ValuePtr Parser::parse(const InputSource &source) const {
-  Scanner scanner(source);
-  PCB::Tokenizer tokenizer(scanner);
+  PCB::Tokenizer tokenizer(new Scanner(source));
   JSON::Builder builder;
 
   parse(tokenizer, builder);

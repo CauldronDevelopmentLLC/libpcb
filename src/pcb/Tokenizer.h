@@ -31,8 +31,8 @@ namespace PCB {
   public:
     using cb::Tokenizer<TokenType>::Token_T;
 
-    Tokenizer(cb::Scanner &scanner) : cb::Tokenizer<TokenType>(scanner)
-    {advance();}
+    Tokenizer(const cb::SmartPointer<cb::Scanner> &scanner) :
+      cb::Tokenizer<TokenType>(scanner) {advance();}
 
     bool isID(const std::string &id) const;
 

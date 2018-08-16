@@ -41,13 +41,13 @@ bool Tokenizer::isID(const string &id) const {
 
 
 void Tokenizer::parseComment() {
-  scanner.match('#');
+  scanner->match('#');
   current.setType(COMMENT_TOKEN);
 
   string value;
-  while (scanner.hasMore() && scanner.peek() != '\n') {
-    if (scanner.peek() != '\r') value.push_back(scanner.peek());
-    scanner.advance();
+  while (scanner->hasMore() && scanner->peek() != '\n') {
+    if (scanner->peek() != '\r') value.push_back(scanner->peek());
+    scanner->advance();
   }
 
   current.setValue(value);
@@ -57,22 +57,22 @@ void Tokenizer::parseComment() {
 void Tokenizer::parseNumber() {
   string value;
   bool foundDot = false;
-  char c = scanner.peek();
+  char c = scanner->peek();
 
   if (c == '-') {
     value.push_back('-');
-    scanner.advance();
-    c = scanner.peek();
+    scanner->advance();
+    c = scanner->peek();
   }
 
   do {
     if (c == '.') foundDot = true;
 
     value.push_back(c);
-    scanner.advance();
+    scanner->advance();
 
-    if (!scanner.hasMore()) break;
-    c = scanner.peek();
+    if (!scanner->hasMore()) break;
+    c = scanner->peek();
 
   } while (isdigit(c) || (!foundDot && c == '.'));
 
@@ -87,13 +87,13 @@ void Tokenizer::parseNumber() {
 void Tokenizer::parseID() {
   string value;
 
-  char c = scanner.peek();
+  char c = scanner->peek();
   while (isalpha(c) || c == '_') {
     value.push_back(c);
 
-    scanner.advance();
-    if (!scanner.hasMore()) break;
-    c = scanner.peek();
+    scanner->advance();
+    if (!scanner->hasMore()) break;
+    c = scanner->peek();
   }
 
   current.set(ID_TOKEN, value);
@@ -101,14 +101,14 @@ void Tokenizer::parseID() {
 
 
 void Tokenizer::parseString() {
-  scanner.match('"');
+  scanner->match('"');
 
   bool escape = false;
   string value;
 
   while (true) {
-    char c = scanner.peek();
-    scanner.advance();
+    char c = scanner->peek();
+    scanner->advance();
 
     if (escape) value.push_back(c);
     escape = false;
@@ -123,30 +123,30 @@ void Tokenizer::parseString() {
 
 
 void Tokenizer::parseChar() {
-  scanner.match('\'');
-  if (!scanner.hasMore()) THROWS("' at end of file");
+  scanner->match('\'');
+  if (!scanner->hasMore()) THROWS("' at end of file");
 
-  string value(1, scanner.peek());
+  string value(1, scanner->peek());
 
-  scanner.advance();
-  scanner.match('\'');
+  scanner->advance();
+  scanner->match('\'');
 
   current.set(CHAR_TOKEN, value);
 }
 
 
 void Tokenizer::next() {
-  scanner.skipWhiteSpace(whiteSpace);
+  scanner->skipWhiteSpace(whiteSpace);
 
-  cb::FileLocation start = scanner.getLocation();
+  cb::FileLocation start = scanner->getLocation();
 
-  if (!scanner.hasMore()) {
+  if (!scanner->hasMore()) {
     current.set(EOF_TOKEN, "");
     return;
   }
 
   bool needAdvance = true;
-  int c = scanner.peek();
+  int c = scanner->peek();
   switch (c) {
   case 0: current.set(EOF_TOKEN, ""); return;
 
@@ -176,7 +176,7 @@ void Tokenizer::next() {
       THROWS("Invalid character: '" << cb::String::escapeC(c) << "'");
   }
 
-  if (needAdvance) scanner.advance();
+  if (needAdvance) scanner->advance();
 
-  current.getLocation() = cb::LocationRange(start, scanner.getLocation());
+  current.getLocation() = cb::LocationRange(start, scanner->getLocation());
 }
