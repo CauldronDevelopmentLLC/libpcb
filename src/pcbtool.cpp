@@ -147,12 +147,13 @@ namespace PCB {
         ((RemoveFound()))(*layout);
       }
 
-      if (align) (Align(align))(*layout);
-      if (mask) (Mask(mask))(*layout);
-      if (minMask) (Mask(mask, true))(*layout);
-      if (clearance) (Clearance(clearance))(*layout);
-      if (textScale) (TextScale(textScale))(*layout);
-      if (silkThickness) (SilkThickness(silkThickness))(*layout);
+      if (cmdLine["--align"].isSet()) (Align(align))(*layout);
+      if (cmdLine["--mask"].isSet()) (Mask(mask))(*layout);
+      if (cmdLine["--min-mask"].isSet()) (Mask(minMask, true))(*layout);
+      if (cmdLine["--clearance"].isSet()) (Clearance(clearance))(*layout);
+      if (cmdLine["--text-scale"].isSet()) (TextScale(textScale))(*layout);
+      if (cmdLine["--silk-thickness"].isSet())
+        (SilkThickness(silkThickness))(*layout);
       if (cmdLine["--via-thermals"].isSet())
         (ViaThermals(viaThermals))(*layout);
       if (cmdLine["--pin-thermals"].isSet())
