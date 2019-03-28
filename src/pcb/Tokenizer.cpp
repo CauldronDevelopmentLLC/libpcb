@@ -78,7 +78,7 @@ void Tokenizer::parseNumber() {
 
 
   if (foundDot && value.length() == 1)
-    THROWS("Invalid decimal point, expected number");
+    THROW("Invalid decimal point, expected number");
 
   current.set(foundDot ? REAL_TOKEN : INTEGER_TOKEN, value);
 }
@@ -124,7 +124,7 @@ void Tokenizer::parseString() {
 
 void Tokenizer::parseChar() {
   scanner->match('\'');
-  if (!scanner->hasMore()) THROWS("' at end of file");
+  if (!scanner->hasMore()) THROW("' at end of file");
 
   string value(1, scanner->peek());
 
@@ -173,7 +173,7 @@ void Tokenizer::next() {
       needAdvance = false;
 
     } else
-      THROWS("Invalid character: '" << cb::String::escapeC(c) << "'");
+      THROW("Invalid character: '" << cb::String::escapeC(c) << "'");
   }
 
   if (needAdvance) scanner->advance();

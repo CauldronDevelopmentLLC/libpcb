@@ -44,7 +44,7 @@ const JSON::Value &Template::get(const string &keyword) {
   }
 
   if (!templ->hasDict(keyword))
-    THROWS("Unrecognized keyword '" << keyword << "'");
+    THROW("Unrecognized keyword '" << keyword << "'");
 
   return templ->getDict(keyword);
 }

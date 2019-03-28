@@ -149,7 +149,7 @@ void Parser::parseHead(Tokenizer &tokenizer, JSON::Sink &sink,
         if (unit == "mil") value *= 0.0254;
         else if (unit == "in") value *= 25.4;
         else if (unit == "cm") value *= 10;
-        else if (unit != "mm") THROWS("Unrecognized unit '" << unit << "'");
+        else if (unit != "mm") THROW("Unrecognized unit '" << unit << "'");
 
       } else if (square) value *= 0.000254; // 1/100 mil
       else value *= 0.0254; // mil
@@ -168,7 +168,7 @@ void Parser::parseHead(Tokenizer &tokenizer, JSON::Sink &sink,
     } else if (type == "flags") {
       parseFlags(tokenizer.advance().getValue(), sink);
 
-    } else THROWS("Unrecognized param type in template '" << type << "'");
+    } else THROW("Unrecognized param type in template '" << type << "'");
   }
 
   sink.endDict();
@@ -188,7 +188,7 @@ void Parser::parseElement(Tokenizer &tokenizer, const string &name,
 
   if (tokenizer.getType() == OPAREN_TOKEN) {
     if (!templ.hasList("children"))
-      THROWS("Did not expect child elements with " << name);
+      THROW("Did not expect child elements with " << name);
 
     tokenizer.advance();
     sink.beginInsert("children");
@@ -217,7 +217,7 @@ void Parser::parseBody(PCB::Tokenizer &tokenizer, JSON::Sink &sink) const {
       break;
 
     default:
-      THROWS("Unexpected token " << tokenizer.peek() << " in " << getName()
+      THROW("Unexpected token " << tokenizer.peek() << " in " << getName()
              << " body");
     }
 }

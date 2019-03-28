@@ -129,7 +129,7 @@ void Writer::writeHead(const JSON::Value &e, const JSON::Value &templ) const {
     else if (type == "flags")
       writeFlags(values.getDict(name));
 
-    else THROWS("Unrecognized param type in template '" << type << "'");
+    else THROW("Unrecognized param type in template '" << type << "'");
   }
 
   stream << (square ? ']' : ')');
